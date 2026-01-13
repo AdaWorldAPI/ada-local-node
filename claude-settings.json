@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "ada-local": {
+      "type": "sse",
+      "url": "http://127.0.0.1:8000/sse",
+      "description": "Local compute node (bark, n8n, filesystem)"
+    },
+    "ada-hive": {
+      "type": "sse",
+      "url": "https://mcp.exo.red/sse",
+      "description": "Cloud hive (memory, vectors, cross-session)"
+    }
+  }
+}
