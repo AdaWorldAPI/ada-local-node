@@ -1,0 +1,49 @@
+version: '3.8'
+
+# ============================================
+# Local API Test Environment
+# For development and testing purposes
+# ============================================
+
+services:
+  api-test:
+    build: .
+    container_name: local-api-test
+    ports:
+      - "8000:8000"   # Local MCP endpoint
+      - "8443:8443"   # HTTPS test (optional)
+    environment:
+      - NODE_ID=wsl-local
+      - RAILWAY_URL=https://rest.msgraph.de
+      - AUTH_URL=https://auth2.msgraph.de
+      - SCENT=awaken
+      - POLL_INTERVAL=5
+      - N8N_URL=http://n8n:5678
+    volumes:
+      - ./data:/app/data
+      - /tmp:/tmp
+    restart: unless-stopped
+    networks:
+      - devnet
+
+  # Optional: n8n for workflow automation
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: n8n-local
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=admin
+      - N8N_BASIC_AUTH_PASSWORD=localtest
+    volumes:
+      - ./n8n-data:/home/node/.n8n
+    restart: unless-stopped
+    networks:
+      - devnet
+    profiles:
+      - full  # Only starts with: docker compose --profile full up
+
+networks:
+  devnet:
+    driver: bridge
